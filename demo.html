@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive Learning Platform Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .demo-section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .demo-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .feature-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .api-demo {
+            background: #f1f3f4;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .api-demo pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .learning-path {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            background: white;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Adaptive Learning Platform</h1>
+            <p>AI-Powered Personalized Education with Real-time Adaptations</p>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🎯 Core AI Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🔍 Learning Style Analysis</h3>
+                    <p>Advanced NLP and ML algorithms analyze user interactions to identify visual, auditory, kinesthetic, and reading/writing learning preferences.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎨 Dynamic Content Generation</h3>
+                    <p>AI generates personalized exercises, quizzes, and explanations tailored to individual learning styles and knowledge gaps.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 Real-time Adaptation</h3>
+                    <p>Reinforcement learning continuously optimizes the learning path based on user engagement and performance metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌟 Neurodivergent Support</h3>
+                    <p>Specialized algorithms adapt content presentation for ADHD, dyslexia, autism, and other neurodivergent learning needs.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🚀 Live API Demo</h2>
+            <p>Test the backend AI services in real-time:</p>
+            
+            <div class="api-demo">
+                <h3>Backend Status</h3>
+                <button class="btn" onclick="checkBackendStatus()">Check Backend Health</button>
+                <div id="backend-status"></div>
+            </div>
+            
+            <div class="api-demo">
+                <h3>Learning Style Analysis</h3>
+                <button class="btn" onclick="analyzeLearningStyle()">Analyze Learning Style</button>
+                <div id="learning-style-result"></div>
+            </div>
+            
+            <div class="api-demo">
+                <h3>Content Generation</h3>
+                <button class="btn" onclick="generateContent()">Generate Personalized Content</button>
+                <div id="content-result"></div>
+            </div>
+            
+            <div class="api-demo">
+                <h3>Recommendations</h3>
+                <button class="btn" onclick="getRecommendations()">Get AI Recommendations</button>
+                <div id="recommendations-result"></div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📈 Simulated Learning Journey</h2>
+            <div class="learning-path">
+                <h3>Current Learning Path: Python Programming</h3>
+                <p>Adapted for Visual Learner with ADHD considerations</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <p>Progress: 65% Complete</p>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>📚 Current Module</h3>
+                    <p><strong>Object-Oriented Programming</strong><br>
+                    Adapted with visual diagrams and interactive examples</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎯 Next Recommendation</h3>
+                    <p><strong>Practice Project</strong><br>
+                    Build a simple game to reinforce OOP concepts</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Adaptation</h3>
+                    <p><strong>Shorter Sessions</strong><br>
+                    15-minute focused blocks with visual breaks</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🏆 Achievement</h3>
+                    <p><strong>Consistency Streak</strong><br>
+                    7 days of continuous learning!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🔧 Technical Architecture</h2>
+            <div class="api-demo">
+                <h3>Backend Components</h3>
+                <pre>
+🧠 AI Modules:
+├── Learning Style Analyzer (NLP + ML)
+├── Content Generator (GPT-style generation)
+├── Recommendation Engine (Collaborative filtering)
+└── Reinforcement Learning Agent
+
+🗄️ Database Models:
+├── Users & Profiles
+├── Learning Content
+├── Progress Tracking
+└── Session Analytics
+
+🌐 API Endpoints:
+├── /auth/* - Authentication
+├── /learning/* - Learning operations
+├── /ai/* - AI services
+└── /ws - WebSocket for real-time updates</pre>
+            </div>
+            
+            <div class="api-demo">
+                <h3>Frontend Features</h3>
+                <pre>
+⚛️ React Components:
+├── Adaptive Dashboard
+├── Learning Style Assessment
+├── Interactive Content Viewer
+├── Progress Visualization
+└── Real-time Recommendations
+
+🎨 Accessibility Features:
+├── Screen reader support
+├── Keyboard navigation
+├── High contrast modes
+└── Customizable UI elements</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:12000';
+        
+        async function checkBackendStatus() {
+            const statusDiv = document.getElementById('backend-status');
+            statusDiv.innerHTML = '<p>Checking backend...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                statusDiv.innerHTML = `
+                    <div class="status success">
+                        <strong>✅ Backend Online</strong><br>
+                        Status: ${data.status}<br>
+                        Response time: ${Date.now() - startTime}ms
+                    </div>
+                `;
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="status error">
+                        <strong>❌ Backend Offline</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function analyzeLearningStyle() {
+            const resultDiv = document.getElementById('learning-style-result');
+            resultDiv.innerHTML = '<p>Analyzing learning style...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/ai/analyze-learning-style`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_responses: [
+                            "I prefer visual diagrams when learning new concepts",
+                            "I like to take notes while studying",
+                            "I learn better with hands-on practice",
+                            "I need quiet environment to focus"
+                        ]
+                    })
+                });
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="status success">
+                        <strong>🎯 Learning Style Analysis</strong><br>
+                        Primary Style: ${data.primary_style}<br>
+                        Confidence: ${(data.confidence * 100).toFixed(1)}%<br>
+                        Adaptations: ${data.adaptations.join(', ')}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">
+                        <strong>❌ Analysis Failed</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function generateContent() {
+            const resultDiv = document.getElementById('content-result');
+            resultDiv.innerHTML = '<p>Generating personalized content...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/ai/generate-content`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        topic: "Python Functions",
+                        learning_style: "visual",
+                        difficulty_level: "beginner",
+                        user_preferences: ["interactive_examples", "visual_aids"]
+                    })
+                });
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="status success">
+                        <strong>🎨 Generated Content</strong><br>
+                        Type: ${data.content_type}<br>
+                        Difficulty: ${data.difficulty_level}<br>
+                        <details>
+                            <summary>View Content Preview</summary>
+                            <pre>${data.content.substring(0, 200)}...</pre>
+                        </details>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">
+                        <strong>❌ Generation Failed</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function getRecommendations() {
+            const resultDiv = document.getElementById('recommendations-result');
+            resultDiv.innerHTML = '<p>Getting AI recommendations...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/ai/recommendations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: "demo_user",
+                        current_topic: "Python OOP",
+                        performance_data: {
+                            "accuracy": 0.75,
+                            "time_spent": 1800,
+                            "engagement": 0.8
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="status success">
+                        <strong>🎯 AI Recommendations</strong><br>
+                        Next Topic: ${data.recommendations[0].title}<br>
+                        Confidence: ${(data.recommendations[0].confidence * 100).toFixed(1)}%<br>
+                        Reason: ${data.recommendations[0].reason}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">
+                        <strong>❌ Recommendations Failed</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        let startTime;
+        
+        // Auto-check backend status on load
+        window.addEventListener('load', () => {
+            startTime = Date.now();
+            setTimeout(checkBackendStatus, 1000);
+        });
+    </script>
+</body>
+</html>
