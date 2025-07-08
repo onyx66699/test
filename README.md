@@ -39,6 +39,28 @@ A comprehensive web application that uses AI to analyze learning styles, generat
 - **Natural Language Processing**: User input analysis
 - **Machine Learning**: Progress tracking and adaptation
 - **Reinforcement Learning**: Experience optimization
+- **OpenAI Integration**: Advanced GPT-powered content generation and analysis
+
+## 🤖 OpenAI Integration Features
+
+### Enhanced AI Capabilities
+- **Advanced Learning Style Analysis**: Uses GPT models to analyze user responses with sophisticated NLP
+- **Dynamic Content Generation**: Creates contextual, personalized learning materials
+- **Smart Recommendations**: Provides detailed, confidence-scored learning path suggestions
+- **Adaptive Quiz Generation**: Automatically creates custom quiz questions adapted to learning styles
+- **Neurodivergent Considerations**: Specialized adaptations and recommendations
+
+### Hybrid Architecture
+- **Seamless Fallback**: Automatically switches to local AI if OpenAI is unavailable
+- **Enhanced + Basic Modes**: Compare OpenAI-powered vs local AI implementations
+- **Batch Processing**: Efficient processing of multiple AI operations
+- **Real-time Status**: Monitor AI service availability and capabilities
+
+### Configuration Options
+- **Flexible Models**: Support for gpt-4o-mini, gpt-4o, and other OpenAI models
+- **Customizable Parameters**: Adjustable temperature, max tokens, and other settings
+- **Environment-based**: Easy configuration via environment variables
+- **Optional Integration**: Fully functional without OpenAI (fallback mode)
 
 ## 🚀 Quick Start
 
@@ -46,6 +68,22 @@ A comprehensive web application that uses AI to analyze learning styles, generat
 - Python 3.8+
 - Node.js 16+
 - npm or yarn
+- OpenAI API Key (optional, for enhanced AI features)
+
+### Environment Setup
+1. **Copy environment template:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Configure OpenAI (Optional but Recommended):**
+   ```bash
+   # Edit .env file
+   OPENAI_API_KEY=sk-your-api-key-here
+   OPENAI_MODEL=gpt-4o-mini
+   OPENAI_MAX_TOKENS=1000
+   OPENAI_TEMPERATURE=0.7
+   ```
 
 ### Backend Setup
 ```bash
@@ -62,9 +100,13 @@ npm run build
 npm run preview -- --host 0.0.0.0 --port 12001
 ```
 
-### Demo
+### Demo Options
 ```bash
+# Basic demo
 python demo_server.py
+
+# Enhanced demo with OpenAI features (recommended)
+# Open demo_enhanced.html in browser after starting backend
 ```
 
 ## 🌐 Access Points
@@ -75,17 +117,37 @@ python demo_server.py
 
 ## 🧪 Testing
 
-Run the comprehensive integration test:
+### Basic Integration Tests
 ```bash
 python integration_test.py
 ```
 
+### OpenAI Integration Tests
+```bash
+python test_openai_integration.py
+```
+
+**Test Results**: 
+- Basic Integration: 5/5 tests passing ✅
+- OpenAI Integration: 8/8 tests available (requires API key for full functionality)
+
 ## 📊 API Endpoints
 
 ### AI Endpoints
+
+#### Basic AI Endpoints
 - `POST /ai/analyze-learning-style` - Analyze user learning style
 - `POST /ai/generate-content` - Generate personalized content
 - `POST /ai/recommendations` - Get learning recommendations
+
+#### Enhanced AI Endpoints (with OpenAI Integration)
+- `GET /ai/status` - Check AI service status
+- `POST /ai/analyze-learning-style-enhanced` - Enhanced learning style analysis
+- `POST /ai/generate-content-enhanced` - Enhanced content generation
+- `POST /ai/recommendations-enhanced` - Smart recommendations
+- `POST /ai/generate-quiz` - Generate adaptive quiz questions (OpenAI only)
+- `POST /ai/batch-analysis` - Batch AI processing
+- `GET /ai/capabilities` - Get AI capabilities information
 
 ### Core Endpoints
 - `GET /health` - Health check

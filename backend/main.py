@@ -6,7 +6,7 @@ import uvicorn
 import os
 
 from app.database.database import create_tables
-from app.api import auth, learning
+from app.api import auth, learning, ai_enhanced
 
 # Create tables on startup
 @asynccontextmanager
@@ -37,6 +37,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth.router)
 app.include_router(learning.router)
+app.include_router(ai_enhanced.router)
 
 # Health check endpoint
 @app.get("/")

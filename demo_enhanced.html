@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Adaptive Learning App Demo - OpenAI Integration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .ai-status {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #28a745;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .ai-status.fallback {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+        }
+
+        .ai-status.error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .demo-section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .demo-section:last-child {
+            border-bottom: none;
+        }
+
+        .demo-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .demo-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .demo-card h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn.enhanced {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .btn.fallback {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        }
+
+        .result-box {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .result-box pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .feature-badge {
+            display: inline-block;
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin: 2px;
+        }
+
+        .feature-badge.openai {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .feature-badge.fallback {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .comparison-table .check {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .comparison-table .cross {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Enhanced Adaptive Learning App</h1>
+            <p>AI-Powered Personalized Learning with OpenAI Integration</p>
+        </div>
+
+        <div id="aiStatus" class="ai-status">
+            <div class="loading"></div>
+            Checking AI service status...
+        </div>
+
+        <div class="demo-section">
+            <h2>🚀 AI Capabilities Comparison</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>OpenAI Enhanced</th>
+                        <th>Local Fallback</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Learning Style Analysis</td>
+                        <td class="check">✓ Advanced</td>
+                        <td class="check">✓ Basic</td>
+                        <td>Analyzes user responses to determine learning preferences</td>
+                    </tr>
+                    <tr>
+                        <td>Content Generation</td>
+                        <td class="check">✓ Dynamic</td>
+                        <td class="check">✓ Template-based</td>
+                        <td>Creates personalized learning materials</td>
+                    </tr>
+                    <tr>
+                        <td>Smart Recommendations</td>
+                        <td class="check">✓ Context-aware</td>
+                        <td class="check">✓ Rule-based</td>
+                        <td>Suggests optimal learning paths</td>
+                    </tr>
+                    <tr>
+                        <td>Quiz Generation</td>
+                        <td class="check">✓ Adaptive</td>
+                        <td class="cross">✗ Not available</td>
+                        <td>Generates custom quiz questions</td>
+                    </tr>
+                    <tr>
+                        <td>Neurodivergent Support</td>
+                        <td class="check">✓ Specialized</td>
+                        <td class="check">✓ Basic</td>
+                        <td>Adaptations for different learning needs</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎯 Enhanced Learning Style Analysis</h2>
+            <div class="demo-card">
+                <h3>Analyze Learning Preferences</h3>
+                <div class="input-group">
+                    <label>Describe your learning preferences:</label>
+                    <textarea id="learningResponses" placeholder="e.g., I prefer visual diagrams and interactive examples. I learn better with hands-on practice. I need quiet environment to focus.">I prefer visual diagrams and interactive examples. I learn better with hands-on practice. I need quiet environment to focus.</textarea>
+                </div>
+                <button class="btn enhanced" onclick="testEnhancedLearningStyle()">
+                    <span class="feature-badge openai">OpenAI</span> Enhanced Analysis
+                </button>
+                <button class="btn fallback" onclick="testFallbackLearningStyle()">
+                    <span class="feature-badge fallback">Local</span> Fallback Analysis
+                </button>
+                <div id="learningStyleResult" class="result-box" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>📚 Enhanced Content Generation</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>Generate Learning Content</h3>
+                    <div class="input-group">
+                        <label>Topic:</label>
+                        <input type="text" id="contentTopic" value="Python Functions" placeholder="e.g., Python Functions">
+                    </div>
+                    <div class="input-group">
+                        <label>Learning Style:</label>
+                        <select id="contentStyle">
+                            <option value="visual">Visual</option>
+                            <option value="auditory">Auditory</option>
+                            <option value="kinesthetic">Kinesthetic</option>
+                            <option value="reading_writing">Reading/Writing</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Difficulty:</label>
+                        <select id="contentDifficulty">
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <button class="btn enhanced" onclick="testEnhancedContent()">
+                        <span class="feature-badge openai">OpenAI</span> Enhanced Generation
+                    </button>
+                    <button class="btn fallback" onclick="testFallbackContent()">
+                        <span class="feature-badge fallback">Local</span> Fallback Generation
+                    </button>
+                    <div id="contentResult" class="result-box" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎯 Smart Recommendations</h2>
+            <div class="demo-card">
+                <h3>Get Personalized Learning Path</h3>
+                <div class="input-group">
+                    <label>Current Performance (0-1):</label>
+                    <input type="number" id="performance" value="0.75" min="0" max="1" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>Learning Style:</label>
+                    <select id="recStyle">
+                        <option value="visual">Visual</option>
+                        <option value="auditory">Auditory</option>
+                        <option value="kinesthetic">Kinesthetic</option>
+                        <option value="reading_writing">Reading/Writing</option>
+                    </select>
+                </div>
+                <button class="btn enhanced" onclick="testEnhancedRecommendations()">
+                    <span class="feature-badge openai">OpenAI</span> Smart Recommendations
+                </button>
+                <button class="btn fallback" onclick="testFallbackRecommendations()">
+                    <span class="feature-badge fallback">Local</span> Basic Recommendations
+                </button>
+                <div id="recommendationsResult" class="result-box" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>📝 Adaptive Quiz Generation</h2>
+            <div class="demo-card">
+                <h3>Generate Custom Quiz</h3>
+                <p><span class="feature-badge openai">OpenAI Only</span> This feature requires OpenAI integration</p>
+                <div class="input-group">
+                    <label>Quiz Topic:</label>
+                    <input type="text" id="quizTopic" value="Python Loops" placeholder="e.g., Python Loops">
+                </div>
+                <div class="input-group">
+                    <label>Number of Questions:</label>
+                    <input type="number" id="numQuestions" value="3" min="1" max="10">
+                </div>
+                <button class="btn enhanced" onclick="testQuizGeneration()" id="quizBtn">
+                    <span class="feature-badge openai">OpenAI</span> Generate Quiz
+                </button>
+                <div id="quizResult" class="result-box" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>⚡ Batch AI Processing</h2>
+            <div class="demo-card">
+                <h3>Process Multiple AI Operations</h3>
+                <p>Test multiple AI capabilities simultaneously for efficiency</p>
+                <button class="btn enhanced" onclick="testBatchProcessing()">
+                    <span class="feature-badge openai">Hybrid</span> Batch Analysis
+                </button>
+                <div id="batchResult" class="result-box" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let aiStatus = { openai_available: false, fallback_available: true };
+
+        // Check AI service status on load
+        async function checkAIStatus() {
+            try {
+                const response = await fetch('http://localhost:12000/ai/status');
+                aiStatus = await response.json();
+                updateAIStatusDisplay();
+            } catch (error) {
+                console.error('Failed to check AI status:', error);
+                updateAIStatusDisplay(false);
+            }
+        }
+
+        function updateAIStatusDisplay(available = true) {
+            const statusDiv = document.getElementById('aiStatus');
+            
+            if (!available) {
+                statusDiv.className = 'ai-status error';
+                statusDiv.innerHTML = '❌ Backend server not available. Please start the backend server first.';
+                return;
+            }
+
+            if (aiStatus.openai_available) {
+                statusDiv.className = 'ai-status';
+                statusDiv.innerHTML = `
+                    ✅ <strong>OpenAI Enhanced Mode Active</strong><br>
+                    Model: ${aiStatus.model || 'gpt-4o-mini'}<br>
+                    All advanced AI features available including quiz generation
+                `;
+            } else {
+                statusDiv.className = 'ai-status fallback';
+                statusDiv.innerHTML = `
+                    ⚠️ <strong>Fallback Mode Active</strong><br>
+                    OpenAI not configured - using local AI implementations<br>
+                    Basic features available (quiz generation unavailable)
+                `;
+            }
+
+            // Update quiz button state
+            const quizBtn = document.getElementById('quizBtn');
+            if (quizBtn) {
+                quizBtn.disabled = !aiStatus.openai_available;
+                if (!aiStatus.openai_available) {
+                    quizBtn.innerHTML = '<span class="feature-badge">Requires OpenAI</span> Generate Quiz';
+                }
+            }
+        }
+
+        async function testEnhancedLearningStyle() {
+            const responses = document.getElementById('learningResponses').value.split('.').filter(r => r.trim());
+            const resultDiv = document.getElementById('learningStyleResult');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div>Analyzing learning style with enhanced AI...';
+
+            try {
+                const response = await fetch('http://localhost:12000/ai/analyze-learning-style-enhanced', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_responses: responses })
+                });
+
+                const result = await response.json();
+                resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        async function testFallbackLearningStyle() {
+            const responses = document.getElementById('learningResponses').value.split('.').filter(r => r.trim());
+            const resultDiv = document.getElementById('learningStyleResult');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div>Analyzing learning style with local AI...';
+
+            try {
+                const response = await fetch('http://localhost:12000/ai/analyze-learning-style', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_responses: responses })
+                });
+
+                const result = await response.json();
+                result.source = 'fallback';
+                resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        async function testEnhancedContent() {
+            const topic = document.getElementById('contentTopic').value;
+            const style = document.getElementById('contentStyle').value;
+            const difficulty = document.getElementById('contentDifficulty').value;
+            const resultDiv = document.getElementById('contentResult');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div>Generating enhanced content...';
+
+            try {
+                const response = await fetch('http://localhost:12000/ai/generate-content-enhanced', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: topic,
+                        learning_style: style,
+                        difficulty_level: difficulty,
+                        user_preferences: ['interactive', 'examples']
+                    })
+                });
+
+                const result = await response.json();
+                resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        async function testFallbackContent() {
+            const topic = document.getElementById('contentTopic').value;
+            const style = document.getElementById('contentStyle').value;
+            const difficulty = document.getElementById('contentDifficulty').value;
+            const resultDiv = document.getElementById('contentResult');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div>Generating fallback content...';
+
+            try {
+                const response = await fetch('http://localhost:12000/ai/generate-content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: topic,
+                        learning_style: style,
+                        difficulty_level: difficulty
+                    })
+                });
+
+                const result = await response.json();
+                result.source = 'fallback';
+                resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        async function testEnhancedRecommendations() {
+            const performance = parseFloat(document.getElementById('performance').value);
+            const style = document.getElementById('recStyle').value;
+            const resultDiv = document.getElementById('recommendationsResult');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div>Getting smart recommendations...';
+
+            try {
+                const response = await fetch('http://localhost:12000/ai/recommendations-enhanced', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: 'demo_user',
+                        user_profile: { learning_style: style },
+                        performance_data: { accuracy: performance }
+                    })
+                });
+
+                const result = await response.json();
+                resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        async function testFallbackRecommendations() {
+            const performance = parseFloat(document.getElementById('performance').value);
+            const style = document.getElementById('recStyle').value;
+            const resultDiv = document.getElementById('recommendationsResult');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div>Getting basic recommendations...';
+
+            try {
+                const response = await fetch('http://localhost:12000/ai/recommendations', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: 'demo_user',
+                        performance_data: { accuracy: performance }
+                    })
+                });
+
+                const result = await response.json();
+                result.source = 'fallback';
+                resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        async function testQuizGeneration() {
+            const topic = document.getElementById('quizTopic').value;
+            const numQuestions = parseInt(document.getElementById('numQuestions').value);
+            const style = document.getElementById('contentStyle').value;
+            const difficulty = document.getElementById('contentDifficulty').value;
+            const resultDiv = document.getElementById('quizResult');
+            
+            if (!aiStatus.openai_available) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<pre>Quiz generation requires OpenAI integration. Please configure OPENAI_API_KEY.</pre>';
+                return;
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div>Generating adaptive quiz questions...';
+
+            try {
+                const response = await fetch('http://localhost:12000/ai/generate-quiz', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: topic,
+                        difficulty_level: difficulty,
+                        learning_style: style,
+                        num_questions: numQuestions
+                    })
+                });
+
+                const result = await response.json();
+                resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        async function testBatchProcessing() {
+            const resultDiv = document.getElementById('batchResult');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div>Processing batch AI operations...';
+
+            try {
+                const response = await fetch('http://localhost:12000/ai/batch-analysis', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_responses: ['I prefer visual diagrams', 'I like hands-on practice'],
+                        topic: 'Python Basics',
+                        learning_style: 'visual',
+                        difficulty_level: 'beginner',
+                        user_profile: { learning_style: 'visual' },
+                        performance_data: { accuracy: 0.8 }
+                    })
+                });
+
+                const result = await response.json();
+                resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', checkAIStatus);
+    </script>
+</body>
+</html>
