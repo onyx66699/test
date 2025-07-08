@@ -1,0 +1,43 @@
+{
+  "summary": {
+    "total": 8,
+    "passed": 0,
+    "failed": 8,
+    "skipped": 0,
+    "success_rate": 0.0
+  },
+  "results": {
+    "AI Status": {
+      "status": "failed",
+      "error": "Connection failed: Cannot connect to host localhost:12000 ssl:default [Connect call failed ('127.0.0.1', 12000)]"
+    },
+    "Enhanced Learning Style Analysis": {
+      "status": "failed",
+      "error": "Request failed: Cannot connect to host localhost:12000 ssl:default [Connect call failed ('127.0.0.1', 12000)]"
+    },
+    "Enhanced Content Generation": {
+      "status": "failed",
+      "error": "Request failed: Cannot connect to host localhost:12000 ssl:default [Connect call failed ('127.0.0.1', 12000)]"
+    },
+    "Enhanced Recommendations": {
+      "status": "failed",
+      "error": "Request failed: Cannot connect to host localhost:12000 ssl:default [Connect call failed ('127.0.0.1', 12000)]"
+    },
+    "Quiz Generation": {
+      "status": "failed",
+      "error": "Request failed: Cannot connect to host localhost:12000 ssl:default [Connect call failed ('127.0.0.1', 12000)]"
+    },
+    "Batch Processing": {
+      "status": "failed",
+      "error": "Request failed: Cannot connect to host localhost:12000 ssl:default [Connect call failed ('127.0.0.1', 12000)]"
+    },
+    "AI Capabilities": {
+      "status": "failed",
+      "error": "Request failed: Cannot connect to host localhost:12000 ssl:default [Connect call failed ('127.0.0.1', 12000)]"
+    },
+    "Enhanced vs Fallback": {
+      "status": "failed",
+      "error": "Comparison failed: Cannot connect to host localhost:12000 ssl:default [Connect call failed ('127.0.0.1', 12000)]"
+    }
+  }
+}

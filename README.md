@@ -95,10 +95,13 @@ python main.py
 ### Frontend Setup
 ```bash
 cd frontend
-npm install
+npm cache clean --force
+npm install --legacy-peer-deps
 npm run build
 npm run preview -- --host 0.0.0.0 --port 12001
 ```
+
+> **Note**: Use `--legacy-peer-deps` flag to resolve dependency conflicts between Vite 5.4.19 and older React dependencies.
 
 ### Demo Options
 ```bash
@@ -130,6 +133,31 @@ python test_openai_integration.py
 **Test Results**: 
 - Basic Integration: 5/5 tests passing ✅
 - OpenAI Integration: 8/8 tests available (requires API key for full functionality)
+
+## 🔧 Troubleshooting
+
+### Frontend Dependency Issues
+If you encounter npm dependency resolution errors:
+
+```bash
+cd frontend
+npm cache clean --force
+npm install --legacy-peer-deps
+```
+
+**Common Issues:**
+- `ERESOLVE` errors: Use `--legacy-peer-deps` flag
+- Vite compatibility: Ensure `@types/node` version 20+
+- Build failures: Clear cache and reinstall dependencies
+
+### Backend Issues
+- **Port conflicts**: Ensure port 12000 is available
+- **OpenAI errors**: Check API key configuration in `.env`
+- **Import errors**: Verify all dependencies in `requirements.txt` are installed
+
+### Testing Issues
+- **Connection refused**: Start backend server before running tests
+- **OpenAI tests fail**: Configure `OPENAI_API_KEY` or expect fallback mode
 
 ## 📊 API Endpoints
 
