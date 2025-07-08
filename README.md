@@ -70,7 +70,6 @@ python demo_server.py
 ## 🌐 Access Points
 
 - **Backend API**: http://localhost:12000
-- **Frontend**: https://work-2-xfbrapmqilkuzpuz.prod-runtime.all-hands.dev
 - **Interactive Demo**: http://localhost:12002
 - **API Documentation**: http://localhost:12000/docs
 
